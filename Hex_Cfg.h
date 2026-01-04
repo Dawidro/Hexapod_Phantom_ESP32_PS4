@@ -45,7 +45,6 @@
 #define DBG_SERIAL_BAUD 115200
 
 // SSC-32 Serial Port (Hardware Serial)
-#define SSCSerial Serial2
 #define SSC_BAUD 115200
 #define SSC_RX_PIN 16       // ESP32 RX pin connected to SSC-32 TX
 #define SSC_TX_PIN 17       // ESP32 TX pin connected to SSC-32 RX
@@ -260,29 +259,29 @@ static const byte PROGMEM cTarsPin[] = {
 //=============================================================================
 // Body and Movement Settings
 //=============================================================================
-#define cRRInitPosX     CHexInitXZCos60      //Start positions of the Right Rear leg
-#define cRRInitPosY     CHexInitY
-#define cRRInitPosZ     CHexInitXZSin60
+#define cRRInitPosX     cHexInitXZCos      //Start positions of the Right Rear leg
+#define cRRInitPosY     cHexInitY
+#define cRRInitPosZ     cHexInitXZSin
 
 #define cRMInitPosX     cHexInitXZ      //Start positions of the Right Middle leg
-#define cRMInitPosY     CHexInitY
+#define cRMInitPosY     cHexInitY
 #define cRMInitPosZ     0
 
-#define cRFInitPosX     CHexInitXZCos60      //Start positions of the Right Front leg
-#define cRFInitPosY     CHexInitY
-#define cRFInitPosZ     -CHexInitXZSin60
+#define cRFInitPosX     cHexInitXZCos      //Start positions of the Right Front leg
+#define cRFInitPosY     cHexInitY
+#define cRFInitPosZ     -cHexInitXZSin
 
-#define cLRInitPosX     CHexInitXZCos60      //Start positions of the Left Rear leg
-#define cLRInitPosY     CHexInitY
-#define cLRInitPosZ     CHexInitXZSin60
+#define cLRInitPosX     cHexInitXZCos      //Start positions of the Left Rear leg
+#define cLRInitPosY     cHexInitY
+#define cLRInitPosZ     cHexInitXZSin
 
 #define cLMInitPosX     cHexInitXZ      //Start positions of the Left Middle leg
-#define cLMInitPosY     CHexInitY
+#define cLMInitPosY     cHexInitY
 #define cLMInitPosZ     0
 
-#define cLFInitPosX     CHexInitXZCos60      //Start positions of the Left Front leg
-#define cLFInitPosY     CHexInitY
-#define cLFInitPosZ     -CHexInitXZSin60
+#define cLFInitPosX     cHexInitXZCos      //Start positions of the Left Front leg
+#define cLFInitPosY     cHexInitY
+#define cLFInitPosZ     -cHexInitXZSin
 
 //=============================================================================
 // Debug Options

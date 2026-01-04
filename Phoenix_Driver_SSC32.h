@@ -42,6 +42,11 @@ SoftwareSerial SSCSerial(cSSC_IN, cSSC_OUT);
 #endif
 #endif
 
+// ESP32 support for Serial2
+#ifdef ESP32
+#define SSCSerial Serial2
+#endif
+
 //=============================================================================
 // Global - Local to this file only...
 //=============================================================================
@@ -54,7 +59,21 @@ extern int SSCRead (byte* pb, int cb, word wTimeout, word wEOL);
 //Init
 //--------------------------------------------------------------------
 void ServoDriver::Init(void) {
+#ifdef ESP32
+  // Initialize ESP32 hardware serial
+  Serial2.begin(SSC_BAUD, SERIAL_8N1, SSC_RX_PIN, SSC_TX_PIN);
+#else
+  #ifdef __AVR__
+  #if not defined(UBRR1H)
+  #if cSSC_IN == 0
+  #define SSCSerial Serial
+  #else
+  SoftwareSerial SSCSerial(cSSC_IN, cSSC_OUT);
+  #endif    
+  #endif
+  #endif
   SSCSerial.begin(cSSC_BAUD);
+#endif
 
   // Lets do the check for GP Enabled here...
 #ifdef OPT_GPPLAYER
@@ -74,7 +93,11 @@ void ServoDriver::Init(void) {
   // Instead of hard checking version numbers instead ask it for
   // status of one of the players.  If we do not get a response...
   // probably does not support 
+#ifdef ESP32
+  Serial2.println(F("QPL0"));
+#else
   SSCSerial.println(F("QPL0"));
+#endif
   cbRead = SSCRead((byte*)abT, 4, 25000, (word)-1);
 
 #ifdef DBGSerial
@@ -335,6 +358,24 @@ void ServoDriver::OutputServoInfoForLeg(byte LegIndex, short sCoxaAngle1, short 
 #endif
 
 #ifdef cSSC_BINARYMODE
+#ifdef ESP32
+  Serial2.write(pgm_read_byte(&cCoxaPin[LegIndex])  + 0x80);
+  Serial2.write(wCoxaSSCV >> 8);
+  Serial2.write(wCoxaSSCV & 0xff);
+  Serial2.write(pgm_read_byte(&cFemurPin[LegIndex]) + 0x80);
+  Serial2.write(wFemurSSCV >> 8);
+  Serial2.write(wFemurSSCV & 0xff);
+  Serial2.write(pgm_read_byte(&cTibiaPin[LegIndex]) + 0x80);
+  Serial2.write(wTibiaSSCV >> 8);
+  Serial2.write(wTibiaSSCV & 0xff);
+#ifdef c4DOF
+  if ((byte)pgm_read_byte(&cTarsLength[LegIndex])) {    // We allow mix of 3 and 4 DOF legs...
+    Serial2.write(pgm_read_byte(&cTarsPin[LegIndex]) + 0x80);
+    Serial2.write(wTarsSSCV >> 8);
+    Serial2.write(wTarsSSCV & 0xff);
+  }
+#endif
+#else
   SSCSerial.write(pgm_read_byte(&cCoxaPin[LegIndex])  + 0x80);
   SSCSerial.write(wCoxaSSCV >> 8);
   SSCSerial.write(wCoxaSSCV & 0xff);
@@ -349,6 +390,29 @@ void ServoDriver::OutputServoInfoForLeg(byte LegIndex, short sCoxaAngle1, short 
     SSCSerial.write(pgm_read_byte(&cTarsPin[LegIndex]) + 0x80);
     SSCSerial.write(wTarsSSCV >> 8);
     SSCSerial.write(wTarsSSCV & 0xff);
+  }
+#endif
+#endif
+#else
+#ifdef ESP32
+  Serial2.print("#");
+  Serial2.print(pgm_read_byte(&cCoxaPin[LegIndex]), DEC);
+  Serial2.print("P");
+  Serial2.print(wCoxaSSCV, DEC);
+  Serial2.print("#");
+  Serial2.print(pgm_read_byte(&cFemurPin[LegIndex]), DEC);
+  Serial2.print("P");
+  Serial2.print(wFemurSSCV, DEC);
+  Serial2.print("#");
+  Serial2.print(pgm_read_byte(&cTibiaPin[LegIndex]), DEC);
+  Serial2.print("P");
+  Serial2.print(wTibiaSSCV, DEC);
+#ifdef c4DOF
+  if ((byte)pgm_read_byte(&cTarsLength[LegIndex])) {
+    Serial2.print("#");
+    Serial2.print(pgm_read_byte(&cTarsPin[LegIndex]), DEC);
+    Serial2.print("P");
+    Serial2.print(wTarsSSCV, DEC);
   }
 #endif
 #else
@@ -371,6 +435,7 @@ void ServoDriver::OutputServoInfoForLeg(byte LegIndex, short sCoxaAngle1, short 
     SSCSerial.print("P");
     SSCSerial.print(wTarsSSCV, DEC);
   }
+#endif
 #endif
 #endif        
   g_InputController.AllowControllerInterrupts(true);    // Ok for hserial again...
@@ -395,11 +460,20 @@ void ServoDriver::CommitServoDriver(word wMoveTime)
   abOut[0] = 0xA1;
   abOut[1] = wMoveTime >> 8;
   abOut[2] = wMoveTime & 0xff;
+#ifdef ESP32
+  Serial2.write(abOut, 3);
+#else
   SSCSerial.write(abOut, 3);
+#endif
 #else
   //Send <CR>
+#ifdef ESP32
+  Serial2.print("T");
+  Serial2.println(wMoveTime, DEC);
+#else
   SSCSerial.print("T");
   SSCSerial.println(wMoveTime, DEC);
+#endif
 #endif
 
   g_InputController.AllowControllerInterrupts(true);    
@@ -412,13 +486,22 @@ void ServoDriver::CommitServoDriver(word wMoveTime)
 void ServoDriver::FreeServos(void)
 {
   g_InputController.AllowControllerInterrupts(false);    // If on xbee on hserial tell hserial to not processess...
+#ifdef ESP32
+  for (byte LegIndex = 0; LegIndex < 32; LegIndex++) {
+    Serial2.print("#");
+    Serial2.print(LegIndex, DEC);
+    Serial2.print("P0");
+  }
+  Serial2.print("T200\r");
+#else
   for (byte LegIndex = 0; LegIndex < 32; LegIndex++) {
     SSCSerial.print("#");
     SSCSerial.print(LegIndex, DEC);
     SSCSerial.print("P0");
   }
   SSCSerial.print("T200\r");
-  g_InputController.AllowControllerInterrupts(true);    
+#endif
+  g_InputController.AllowControllerInterrupts(true);
 }
 
 //--------------------------------------------------------------------
