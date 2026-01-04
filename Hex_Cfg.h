@@ -121,22 +121,6 @@
 // or kept open for future expansion
 
 //=============================================================================
-// Servo Mapping Arrays
-//=============================================================================
-// Create arrays in program memory to save RAM
-static const byte PROGMEM cCoxaPin[] = {
-  cRRCoxaPin,  cRMCoxaPin,  cRFCoxaPin,  cLRCoxaPin,  cLMCoxaPin,  cLFCoxaPin};
-static const byte PROGMEM cFemurPin[] = {
-  cRRFemurPin, cRMFemurPin, cRFFemurPin, cLRFemurPin, cLMFemurPin, cLFFemurPin};
-static const byte PROGMEM cTibiaPin[] = {
-  cRRTibiaPin, cRMTibiaPin, cRFTibiaPin, cLRTibiaPin, cLMTibiaPin, cLFTibiaPin};
-
-#ifdef c4DOF
-static const byte PROGMEM cTarsPin[] = {
-  cRRTarsPin,  cRMTarsPin,  cRFTarsPin,  cLRTarsPin,  cLMTarsPin,  cLFTarsPin};
-#endif
-
-//=============================================================================
 //[Hex Configuration]
 //=============================================================================
 
