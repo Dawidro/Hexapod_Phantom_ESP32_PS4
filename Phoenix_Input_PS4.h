@@ -104,7 +104,7 @@ static byte       g_l2Val, g_r2Val;
 static short      g_sGPSMController = 32767;  // What GPSM value have we calculated
 
 // Forward function references
-extern void PS2TurnRobotOff(void);
+extern void PS4TurnRobotOff(void);
 
 //=============================================================================
 // Helper Functions

@@ -26,7 +26,7 @@
 // PS4 Controller Bluetooth MAC Address
 // Replace with your controller's actual MAC address
 // Find it using: Bluetooth settings on your PC/Mac, or SixaxisPairTool on Windows
-// #define PS4_MAC_ADDRESS "1a:2b:3c:01:01:01"  // <-- CHANGE THIS TO YOUR PS4 CONTROLLER MAC
+#define PS4_MAC_ADDRESS "1a:2b:3c:01:01:01"  // <-- CHANGE THIS TO YOUR PS4 CONTROLLER MAC
 
 // Optional: If you want PS4 library to auto-pair (leave undefined for default pairing)
 // #define PS4_AUTO_PAIR
@@ -64,6 +64,9 @@
 #define OPT_TERMINAL_MONITOR
 #define OPT_TERMINAL_MONITOR_IC  // Allow input controller terminal commands
 
+// Servo offset calibration mode - use 'O' command in terminal
+#define OPT_FIND_SERVO_OFFSETS   // Enables interactive servo offset adjustment
+
 // Allow sketch to add custom setup code
 // #define OPT_SKETCHSETUP      // If defined, calls SketchSetup() from your .ino
 
@@ -75,20 +78,14 @@
 
 //=============================================================================
 //[Botboarduino Pin Numbers]
-// ESP32 doesn't use the same pin mapping, but keeping for reference
+// Not used on ESP32, but kept for compatibility
 //=============================================================================
-// #define SOUND_PIN    0xFF   // Tell system we have no sound
+#define SOUND_PIN    0xFF   // Tell system we have no sound (or define actual pin if you have buzzer)
 
 //=============================================================================
 //[SSC32 Pin Numbers]
+// SSC-32 Channel assignments are defined directly below in the pin mapping
 //=============================================================================
-#define cCoxaPin     pgm_read_byte(&cCoxaPin[LegIndex])
-#define cFemurPin    pgm_read_byte(&cFemurPin[LegIndex])
-#define cTibiaPin    pgm_read_byte(&cTibiaPin[LegIndex])
-
-#ifdef c4DOF
-#define cTarsPin     pgm_read_byte(&cTarsPin[LegIndex])
-#endif
 
 //=============================================================================
 // Define Leg/Servo Mapping
@@ -141,206 +138,151 @@ static const byte PROGMEM cTarsPin[] = {
 #endif
 
 //=============================================================================
-//[REMOTE]
-//=============================================================================
-#define WALKMODE          0
-#define TRANSLATEMODE     1
-#define ROTATEMODE        2
-#define SINGLELEGMODE     3
-#define GPPLAYERMODE      4
-
-//=============================================================================
 //[Hex Configuration]
 //=============================================================================
 
-// Leg dimensions - MEASURE YOUR HEXAPOD AND UPDATE THESE!
-// All measurements in millimeters
-#define cXXTibiaInv 0     // 0 = Normal, 1 = Inverted (depends on servo orientation)
-#define cRRTibiaInv 0
-#define cRMTibiaInv 0
-#define cRFTibiaInv 0
-#define cLRTibiaInv 0
-#define cLMTibiaInv 0
-#define cLFTibiaInv 0
+//=============================================================================
+// Individual Servo Ranges
+//=============================================================================
+#define cRRCoxaMax1	740
+#define cRRFemurMin1	-1010
+#define cRRFemurMax1	950
+#define cRRTibiaMin1	-1060
+#define cRRTibiaMax1	770
 
-#define cRRCoxaLength     29    // Right Rear leg
-#define cRRFemurLength    76
-#define cRRTibiaLength    106
+#define cRMCoxaMin1	-530	//Mechanical limits of the Right Middle Leg, decimals = 1
+#define cRMCoxaMax1	530
+#define cRMFemurMin1	-1010
+#define cRMFemurMax1	950
+#define cRMTibiaMin1	-1060
+#define cRMTibiaMax1	770
 
-#define cRMCoxaLength     29    // Right Middle leg
-#define cRMFemurLength    76
-#define cRMTibiaLength    106
+#define cRFCoxaMin1	-580	//Mechanical limits of the Right Front Leg, decimals = 1
+#define cRFCoxaMax1	740
+#define cRFFemurMin1	-1010
+#define cRFFemurMax1	950
+#define cRFTibiaMin1	-1060
+#define cRFTibiaMax1	770
 
-#define cRFCoxaLength     29    // Right Front leg
-#define cRFFemurLength    76
-#define cRFTibiaLength    106
+#define cLRCoxaMin1	-740	//Mechanical limits of the Left Rear Leg, decimals = 1
+#define cLRCoxaMax1	260
+#define cLRFemurMin1	-950
+#define cLRFemurMax1	1010
+#define cLRTibiaMin1	-770
+#define cLRTibiaMax1	1060
 
-#define cLRCoxaLength     29    // Left Rear leg
-#define cLRFemurLength    76
-#define cLRTibiaLength    106
+#define cLMCoxaMin1	-530	//Mechanical limits of the Left Middle Leg, decimals = 1
+#define cLMCoxaMax1	530
+#define cLMFemurMin1	-950
+#define cLMFemurMax1	1010
+#define cLMTibiaMin1	-770
+#define cLMTibiaMax1	1060
 
-#define cLMCoxaLength     29    // Left Middle leg
-#define cLMFemurLength    76
-#define cLMTibiaLength    106
+#define cLFCoxaMin1	-740	//Mechanical limits of the Left Front Leg, decimals = 1
+#define cLFCoxaMax1	580
+#define cLFFemurMin1	-950
+#define cLFFemurMax1	1010
+#define cLFTibiaMin1	-770
+#define cLFTibiaMax1	1060
 
-#define cLFCoxaLength     29    // Left Front leg
-#define cLFFemurLength    76
-#define cLFTibiaLength    106
+//--------------------------------------------------------------------
+//[LEG DIMENSIONS]
+//--------------------------------------------------------------------
+#define cXXCoxaLength     29    // This is for TH3-R legs
+#define cXXFemurLength    76
+#define cXXTibiaLength    106
+#define cXXTarsLength     85    // 4DOF only...
+
+#define cRRCoxaLength     cXXCoxaLength	    //Right Rear leg
+#define cRRFemurLength    cXXFemurLength
+#define cRRTibiaLength    cXXTibiaLength
+#define cRRTarsLength	    cXXTarsLength	    //4DOF ONLY
+
+#define cRMCoxaLength     cXXCoxaLength	    //Right middle leg
+#define cRMFemurLength    cXXFemurLength
+#define cRMTibiaLength    cXXTibiaLength
+#define cRMTarsLength	    cXXTarsLength	    //4DOF ONLY
+
+#define cRFCoxaLength     cXXCoxaLength	    //Rigth front leg
+#define cRFFemurLength    cXXFemurLength
+#define cRFTibiaLength    cXXTibiaLength
+#define cRFTarsLength	    cXXTarsLength    //4DOF ONLY
+
+#define cLRCoxaLength     cXXCoxaLength	    //Left Rear leg
+#define cLRFemurLength    cXXFemurLength
+#define cLRTibiaLength    cXXTibiaLength
+#define cLRTarsLength	    cXXTarsLength    //4DOF ONLY
+
+#define cLMCoxaLength     cXXCoxaLength	    //Left middle leg
+#define cLMFemurLength    cXXFemurLength
+#define cLMTibiaLength    cXXTibiaLength
+#define cLMTarsLength	    cXXTarsLength	    //4DOF ONLY
+
+#define cLFCoxaLength     cXXCoxaLength	    //Left front leg
+#define cLFFemurLength    cXXFemurLength
+#define cLFTibiaLength    cXXTibiaLength
+#define cLFTarsLength	    cXXTarsLength	    //4DOF ONLY
+
 
 //=============================================================================
 // Body Dimensions
 //=============================================================================
-#define cRRCoxaAngle1   -450   // Default Coxa setup angle, decimals = 1
-#define cRMCoxaAngle1    0     // 0 degrees = straight out
-#define cRFCoxaAngle1    450   // 45 degrees forward
-#define cLRCoxaAngle1   -450   // decimals = 1
-#define cLMCoxaAngle1    0
-#define cLFCoxaAngle1    450
+#define cRRCoxaAngle1   -600       //Default Coxa setup angle, decimals = 1
+#define cRMCoxaAngle1    0          //Default Coxa setup angle, decimals = 1
+#define cRFCoxaAngle1    600        //Default Coxa setup angle, decimals = 1
+#define cLRCoxaAngle1    -600       //Default Coxa setup angle, decimals = 1
+#define cLMCoxaAngle1    0          //Default Coxa setup angle, decimals = 1
+#define cLFCoxaAngle1    600        //Default Coxa setup angle, decimals = 1
 
-#define cRROffsetX      -43    // Distance X from center of the body to the Right Rear coxa
-#define cRROffsetZ      -82    // Distance Z from center of the body to the Right Rear coxa
-#define cRMOffsetX      -63    // Distance X from center of the body to the Right Middle coxa
-#define cRMOffsetZ      0      // Distance Z from center of the body to the Right Middle coxa
-#define cRFOffsetX      -43    // Distance X from center of the body to the Right Front coxa
-#define cRFOffsetZ      82     // Distance Z from center of the body to the Right Front coxa
+#define cRROffsetX 	-43	    //Distance X from center of the body to the Right Rear coxa
+#define cRROffsetZ 	82	    //Distance Z from center of the body to the Right Rear coxa
+#define cRMOffsetX 	-63	    //Distance X from center of the body to the Right Middle coxa
+#define cRMOffsetZ 	0	    //Distance Z from center of the body to the Right Middle coxa
+#define cRFOffsetX 	-43	    //Distance X from center of the body to the Right Front coxa
+#define cRFOffsetZ 	-82	    //Distance Z from center of the body to the Right Front coxa
 
-#define cLROffsetX      43     // Distance X from center of the body to the Left Rear coxa
-#define cLROffsetZ      -82    // Distance Z from center of the body to the Left Rear coxa
-#define cLMOffsetX      63     // Distance X from center of the body to the Left Middle coxa
-#define cLMOffsetZ      0      // Distance Z from center of the body to the Left Middle coxa
-#define cLFOffsetX      43     // Distance X from center of the body to the Left Front coxa
-#define cLFOffsetZ      82     // Distance Z from center of the body to the Left Front coxa
+#define cLROffsetX 	43	    //Distance X from center of the body to the Left Rear coxa
+#define cLROffsetZ 	82	    //Distance Z from center of the body to the Left Rear coxa
+#define cLMOffsetX 	63	    //Distance X from center of the body to the Left Middle coxa
+#define cLMOffsetZ 	0	    //Distance Z from center of the body to the Left Middle coxa
+#define cLFOffsetX 	43	    //Distance X from center of the body to the Left Front coxa
+#define cLFOffsetZ 	-82	    //Distance Z from center of the body to the Left Front coxa
 
+//---------------------------
 //=============================================================================
 // Start Position of Legs
 //=============================================================================
 #define cHexInitXZ      105    // Default distance from center to foot in X/Z plane
-#define cHexInitXZCos   74     // Default distance X - From center of body to foot (cos(45) * cHexInitXZ)
-#define cHexInitXZSin   74     // Default distance Z - From center of body to foot (sin(45) * cHexInitXZ)
+#define cHexInitXZCos   53     // Default distance X - From center of body to foot (cos(45) * cHexInitXZ)
+#define cHexInitXZSin   91     // Default distance Z - From center of body to foot (sin(45) * cHexInitXZ)
 #define cHexInitY       25     // Default height of body from ground
 
 //=============================================================================
 // Body and Movement Settings
 //=============================================================================
-#define MAX_BODY_Y      100    // Maximum body height
+#define cRRInitPosX     CHexInitXZCos60      //Start positions of the Right Rear leg
+#define cRRInitPosY     CHexInitY
+#define cRRInitPosZ     CHexInitXZSin60
 
-#define cRRInitPosX     cHexInitXZCos      // Right Rear
-#define cRRInitPosY     cHexInitY
-#define cRRInitPosZ     -cHexInitXZSin
-
-#define cRMInitPosX     cHexInitXZ         // Right Middle
-#define cRMInitPosY     cHexInitY
+#define cRMInitPosX     cHexInitXZ      //Start positions of the Right Middle leg
+#define cRMInitPosY     CHexInitY
 #define cRMInitPosZ     0
 
-#define cRFInitPosX     cHexInitXZCos      // Right Front
-#define cRFInitPosY     cHexInitY
-#define cRFInitPosZ     cHexInitXZSin
+#define cRFInitPosX     CHexInitXZCos60      //Start positions of the Right Front leg
+#define cRFInitPosY     CHexInitY
+#define cRFInitPosZ     -CHexInitXZSin60
 
-#define cLRInitPosX     cHexInitXZCos      // Left Rear
-#define cLRInitPosY     cHexInitY
-#define cLRInitPosZ     -cHexInitXZSin
+#define cLRInitPosX     CHexInitXZCos60      //Start positions of the Left Rear leg
+#define cLRInitPosY     CHexInitY
+#define cLRInitPosZ     CHexInitXZSin60
 
-#define cLMInitPosX     cHexInitXZ         // Left Middle
-#define cLMInitPosY     cHexInitY
+#define cLMInitPosX     cHexInitXZ      //Start positions of the Left Middle leg
+#define cLMInitPosY     CHexInitY
 #define cLMInitPosZ     0
 
-#define cLFInitPosX     cHexInitXZCos      // Left Front
-#define cLFInitPosY     cHexInitY
-#define cLFInitPosZ     cHexInitXZSin
-
-//=============================================================================
-//[SERVO PULSE WIDTHS]
-// Servo pulses in microseconds (typically 500-2500)
-// Adjust these based on your servo range
-//=============================================================================
-// Universal Min/Max (if all servos use same range)
-#define CSERVOMIN       500
-#define CSERVOMAX       2500
-
-// Individual Servo Ranges (if needed for fine-tuning)
-// Right Rear leg
-#define cRRCoxaMin1     500
-#define cRRCoxaMax1     2500
-#define cRRFemurMin1    500
-#define cRRFemurMax1    2500
-#define cRRTibiaMin1    500
-#define cRRTibiaMax1    2500
-
-// Right Middle leg
-#define cRMCoxaMin1     500
-#define cRMCoxaMax1     2500
-#define cRMFemurMin1    500
-#define cRMFemurMax1    2500
-#define cRMTibiaMin1    500
-#define cRMTibiaMax1    2500
-
-// Right Front leg
-#define cRFCoxaMin1     500
-#define cRFCoxaMax1     2500
-#define cRFFemurMin1    500
-#define cRFFemurMax1    2500
-#define cRFTibiaMin1    500
-#define cRFTibiaMax1    2500
-
-// Left Rear leg
-#define cLRCoxaMin1     500
-#define cLRCoxaMax1     2500
-#define cLRFemurMin1    500
-#define cLRFemurMax1    2500
-#define cLRTibiaMin1    500
-#define cLRTibiaMax1    2500
-
-// Left Middle leg
-#define cLMCoxaMin1     500
-#define cLMCoxaMax1     2500
-#define cLMFemurMin1    500
-#define cLMFemurMax1    2500
-#define cLMTibiaMin1    500
-#define cLMTibiaMax1    2500
-
-// Left Front leg
-#define cLFCoxaMin1     500
-#define cLFCoxaMax1     2500
-#define cLFFemurMin1    500
-#define cLFFemurMax1    2500
-#define cLFTibiaMin1    500
-#define cLFTibiaMax1    2500
-
-//=============================================================================
-//[SERVO OFFSETS]
-// Servo offsets for calibration - adjust these to align your servos
-// Positive values rotate clockwise, negative counter-clockwise
-// Values are in microseconds added to the calculated pulse width
-//=============================================================================
-// Right Rear leg
-#define cRRCoxaOffset    0
-#define cRRFemurOffset   0
-#define cRRTibiaOffset   0
-
-// Right Middle leg
-#define cRMCoxaOffset    0
-#define cRMFemurOffset   0
-#define cRMTibiaOffset   0
-
-// Right Front leg
-#define cRFCoxaOffset    0
-#define cRFFemurOffset   0
-#define cRFTibiaOffset   0
-
-// Left Rear leg
-#define cLRCoxaOffset    0
-#define cLRFemurOffset   0
-#define cLRTibiaOffset   0
-
-// Left Middle leg
-#define cLMCoxaOffset    0
-#define cLMFemurOffset   0
-#define cLMTibiaOffset   0
-
-// Left Front leg
-#define cLFCoxaOffset    0
-#define cLFFemurOffset   0
-#define cLFTibiaOffset   0
+#define cLFInitPosX     CHexInitXZCos60      //Start positions of the Left Front leg
+#define cLFInitPosY     CHexInitY
+#define cLFInitPosZ     -CHexInitXZSin60
 
 //=============================================================================
 // Debug Options
@@ -349,12 +291,5 @@ static const byte PROGMEM cTarsPin[] = {
 // Allow terminal monitor to output extra debug information
 // #define DEBUG_IOPINS
 #endif
-
-//=============================================================================
-// Calculate some useful values
-//=============================================================================
-#define CNT_LEGS 6
-#define CNT_SERVOS_PER_LEG 3
-#define NUMSERVOS (CNT_LEGS * CNT_SERVOS_PER_LEG)
 
 #endif // HEX_CFG_H
