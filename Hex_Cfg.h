@@ -52,6 +52,7 @@
 #define SSC_RX_PIN 16       // ESP32 RX pin connected to SSC-32 TX
 #define SSC_TX_PIN 17       // ESP32 TX pin connected to SSC-32 RX
 
+
 //=============================================================================
 // Sound Configuration
 //=============================================================================
@@ -68,6 +69,9 @@
 
 // Servo offset calibration mode - use 'O' command in terminal
 #define OPT_FIND_SERVO_OFFSETS   // Enables interactive servo offset adjustment
+
+// Single leg mode
+#define OPT_SINGLELEG // Enables single leg option
 
 // Allow sketch to add custom setup code
 // #define OPT_SKETCHSETUP      // If defined, calls SketchSetup() from your .ino
@@ -127,11 +131,23 @@
 //[Hex Configuration]
 //=============================================================================
 
+<<<<<<< Updated upstream
 // Leg dimensions - MEASURE YOUR HEXAPOD AND UPDATE THESE!
 // All measurements in millimeters
 #define cXXCoxaLength     29    
 #define cXXFemurLength    85
 #define cXXTibiaLength    125
+=======
+//=============================================================================
+// Individual Servo Ranges
+//=============================================================================
+#define cRRCoxaMin1	-260	//Mechanical limits of the Right Rear Leg, decimals = 1
+#define cRRCoxaMax1	740
+#define cRRFemurMin1	-1010
+#define cRRFemurMax1	950
+#define cRRTibiaMin1	-1060
+#define cRRTibiaMax1	770
+>>>>>>> Stashed changes
 
 //  Right Rear (RR) leg
 #define cRRCoxaLength     cXXCoxaLength     
