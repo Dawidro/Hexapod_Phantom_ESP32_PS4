@@ -26,7 +26,7 @@
 // PS4 Controller Bluetooth MAC Address
 // Replace with your controller's actual MAC address
 // Find it using: Bluetooth settings on your PC/Mac, or SixaxisPairTool on Windows
-#define PS4_MAC_ADDRESS "1a:2b:3c:01:01:01"  // <-- CHANGE THIS TO YOUR PS4 CONTROLLER MAC
+//#define PS4_MAC_ADDRESS "1a:2b:3c:01:01:01"  // <-- CHANGE THIS TO YOUR PS4 CONTROLLER MAC
 
 // Optional: If you want PS4 library to auto-pair (leave undefined for default pairing)
 // #define PS4_AUTO_PAIR
@@ -80,7 +80,7 @@
 //[Botboarduino Pin Numbers]
 // Not used on ESP32, but kept for compatibility
 //=============================================================================
-#define SOUND_PIN    0xFF   // Tell system we have no sound (or define actual pin if you have buzzer)
+//#define SOUND_PIN    0xFF   // Tell system we have no sound (or define actual pin if you have buzzer)
 
 //=============================================================================
 //[SSC32 Pin Numbers]
@@ -122,82 +122,74 @@
 // or kept open for future expansion
 
 //=============================================================================
-// Servo Mapping Arrays
-//=============================================================================
-// Create arrays in program memory to save RAM
-static const byte PROGMEM cCoxaPin[] = {
-  cRRCoxaPin,  cRMCoxaPin,  cRFCoxaPin,  cLRCoxaPin,  cLMCoxaPin,  cLFCoxaPin};
-static const byte PROGMEM cFemurPin[] = {
-  cRRFemurPin, cRMFemurPin, cRFFemurPin, cLRFemurPin, cLMFemurPin, cLFFemurPin};
-static const byte PROGMEM cTibiaPin[] = {
-  cRRTibiaPin, cRMTibiaPin, cRFTibiaPin, cLRTibiaPin, cLMTibiaPin, cLFTibiaPin};
-
-#ifdef c4DOF
-static const byte PROGMEM cTarsPin[] = {
-  cRRTarsPin,  cRMTarsPin,  cRFTarsPin,  cLRTarsPin,  cLMTarsPin,  cLFTarsPin};
-#endif
-
-//=============================================================================
 //[Hex Configuration]
 //=============================================================================
 
 // Leg dimensions - MEASURE YOUR HEXAPOD AND UPDATE THESE!
 // All measurements in millimeters
+#define cXXCoxaLength     29    
+#define cXXFemurLength    85
+#define cXXTibiaLength    125
 
-#define cRRCoxaLength     29    // Right Rear leg
-#define cRRFemurLength    76
-#define cRRTibiaLength    106
+//  Right Rear (RR) leg
+#define cRRCoxaLength     cXXCoxaLength     
+#define cRRFemurLength    cXXFemurLength
+#define cRRTibiaLength    cXXTibiaLength
 
-#define cRMCoxaLength     29    // Right Middle leg
-#define cRMFemurLength    76
-#define cRMTibiaLength    106
+//  Right middle (RM) leg
+#define cRMCoxaLength     cXXCoxaLength     
+#define cRMFemurLength    cXXFemurLength
+#define cRMTibiaLength    cXXTibiaLength
 
-#define cRFCoxaLength     29    // Right Front leg
-#define cRFFemurLength    76
-#define cRFTibiaLength    106
+//  Rigth front (RF) leg
+#define cRFCoxaLength     cXXCoxaLength     
+#define cRFFemurLength    cXXFemurLength
+#define cRFTibiaLength    cXXTibiaLength
+  
+//  Left Rear (LR) leg
+#define cLRCoxaLength     cXXCoxaLength     
+#define cLRFemurLength    cXXFemurLength
+#define cLRTibiaLength    cXXTibiaLength
 
-#define cLRCoxaLength     29    // Left Rear leg
-#define cLRFemurLength    76
-#define cLRTibiaLength    106
+//  Left middle (LM) leg
+#define cLMCoxaLength     cXXCoxaLength     
+#define cLMFemurLength    cXXFemurLength
+#define cLMTibiaLength    cXXTibiaLength
 
-#define cLMCoxaLength     29    // Left Middle leg
-#define cLMFemurLength    76
-#define cLMTibiaLength    106
-
-#define cLFCoxaLength     29    // Left Front leg
-#define cLFFemurLength    76
-#define cLFTibiaLength    106
-
+//  Left front (LF) leg
+#define cLFCoxaLength     cXXCoxaLength     
+#define cLFFemurLength    cXXFemurLength
+#define cLFTibiaLength    cXXTibiaLength
 //=============================================================================
 // Body Dimensions
 //=============================================================================
-#define cRRCoxaAngle1   -450   // Default Coxa setup angle, decimals = 1
-#define cRMCoxaAngle1    0     // 0 degrees = straight out
-#define cRFCoxaAngle1    450   // 45 degrees forward
-#define cLRCoxaAngle1   -450   // decimals = 1
-#define cLMCoxaAngle1    0
-#define cLFCoxaAngle1    450
+#define cRRCoxaAngle1   -600        //  Default Coxa setup angle, decimals = 1
+#define cRMCoxaAngle1    0          //  Default Coxa setup angle, decimals = 1
+#define cRFCoxaAngle1    600        //  Default Coxa setup angle, decimals = 1
+#define cLRCoxaAngle1    -600       //  Default Coxa setup angle, decimals = 1
+#define cLMCoxaAngle1    0          //  Default Coxa setup angle, decimals = 1
+#define cLFCoxaAngle1    600        //  Default Coxa setup angle, decimals = 1
 
-#define cRROffsetX      -43    // Distance X from center of the body to the Right Rear coxa
-#define cRROffsetZ      -82    // Distance Z from center of the body to the Right Rear coxa
-#define cRMOffsetX      -63    // Distance X from center of the body to the Right Middle coxa
-#define cRMOffsetZ      0      // Distance Z from center of the body to the Right Middle coxa
-#define cRFOffsetX      -43    // Distance X from center of the body to the Right Front coxa
-#define cRFOffsetZ      82     // Distance Z from center of the body to the Right Front coxa
+#define cRROffsetX  -39     //  Distance X from center of the body to the Right Rear coxa
+#define cRROffsetZ  75      //  Distance Z from center of the body to the Right Rear coxa
+#define cRMOffsetX  -64     //  Distance X from center of the body to the Right Middle coxa
+#define cRMOffsetZ  0       //  Distance Z from center of the body to the Right Middle coxa
+#define cRFOffsetX  -39     //  Distance X from center of the body to the Right Front coxa
+#define cRFOffsetZ  -75     //  Distance Z from center of the body to the Right Front coxa
 
-#define cLROffsetX      43     // Distance X from center of the body to the Left Rear coxa
-#define cLROffsetZ      -82    // Distance Z from center of the body to the Left Rear coxa
-#define cLMOffsetX      63     // Distance X from center of the body to the Left Middle coxa
-#define cLMOffsetZ      0      // Distance Z from center of the body to the Left Middle coxa
-#define cLFOffsetX      43     // Distance X from center of the body to the Left Front coxa
-#define cLFOffsetZ      82     // Distance Z from center of the body to the Left Front coxa
+#define cLROffsetX  39      //  Distance X from center of the body to the Left Rear coxa
+#define cLROffsetZ  75      //  Distance Z from center of the body to the Left Rear coxa
+#define cLMOffsetX  64      //  Distance X from center of the body to the Left Middle coxa
+#define cLMOffsetZ  0       //  Distance Z from center of the body to the Left Middle coxa
+#define cLFOffsetX  39      //  Distance X from center of the body to the Left Front coxa
+#define cLFOffsetZ  -75     //  Distance Z from center of the body to the Left Front coxa
 
 //=============================================================================
 // Start Position of Legs
 //=============================================================================
 #define cHexInitXZ      105    // Default distance from center to foot in X/Z plane
-#define cHexInitXZCos   74     // Default distance X - From center of body to foot (cos(45) * cHexInitXZ)
-#define cHexInitXZSin   74     // Default distance Z - From center of body to foot (sin(45) * cHexInitXZ)
+#define cHexInitXZCos   53     // Default distance X - From center of body to foot (cos(45) * cHexInitXZ)
+#define cHexInitXZSin   91     // Default distance Z - From center of body to foot (sin(45) * cHexInitXZ)
 #define cHexInitY       25     // Default height of body from ground
 
 //=============================================================================
@@ -236,8 +228,8 @@ static const byte PROGMEM cTarsPin[] = {
 // Adjust based on your specific servo model and mechanical constraints
 //=============================================================================
 // Universal Min/Max (if all servos use same range)
-#define CSERVOMIN       500
-#define CSERVOMAX       2500
+//#define CSERVOMIN       500
+//#define CSERVOMAX       2500
 
 // Individual Servo Ranges (optional - uncomment and adjust if needed)
 // Use these if specific servos have different physical limits

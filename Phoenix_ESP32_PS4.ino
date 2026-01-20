@@ -41,7 +41,8 @@
 //=============================================================================
 // Include Phoenix Core and Driver Files
 //=============================================================================
-#include "Phoenix.h"              // Main Phoenix code (includes setup/loop)
+#include "Phoenix.h"              // Phoenix code Header
+#include "Phoenix_Code.h"         // Main Phoenix Code
 #include "Phoenix_Input_PS4.h"    // PS4 Controller input handler
 #include "Phoenix_Driver_SSC32.h" // SSC-32 servo driver
 
@@ -59,7 +60,7 @@
 void SketchSetup(void) {
 #ifdef DBGSerial
   DBGSerial.begin(DBG_SERIAL_BAUD);
-  delay(500);
+  delay(2000);
   
   DBGSerial.println(F("===================================="));
   DBGSerial.println(F("Phoenix Hexapod Robot - ESP32"));
