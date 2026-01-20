@@ -22,7 +22,7 @@
 //=============================================================================
 // PS4 Controller Configuration
 //=============================================================================
-#ifdef USEPS4
+//#ifdef USEPS4
 // PS4 Controller Bluetooth MAC Address
 // Replace with your controller's actual MAC address
 // Find it using: Bluetooth settings on your PC/Mac, or SixaxisPairTool on Windows
@@ -30,13 +30,15 @@
 
 // Optional: If you want PS4 library to auto-pair (leave undefined for default pairing)
 // #define PS4_AUTO_PAIR
-#endif
+//#endif
 
 //=============================================================================
 // Define which Servo Driver we are using
 //=============================================================================
 #define USESSC32            // Using SSC-32 servo controller
+//#define	cSSC_BINARYMODE	1			// Define if your SSC-32 card supports binary mode.
 
+//[SERIAL CONNECTIONS]
 //=============================================================================
 // ESP32 Serial Configuration
 //=============================================================================
@@ -46,7 +48,7 @@
 
 // SSC-32 Serial Port (Hardware Serial)
 #define SSCSerial Serial2
-#define SSC_BAUD 115200
+#define cSSC_BAUD 115200
 #define SSC_RX_PIN 16       // ESP32 RX pin connected to SSC-32 TX
 #define SSC_TX_PIN 17       // ESP32 TX pin connected to SSC-32 RX
 

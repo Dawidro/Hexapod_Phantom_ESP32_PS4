@@ -56,12 +56,6 @@
 #ifndef PHOENIX_INPUT_PS4_H
 #define PHOENIX_INPUT_PS4_H
 
-#if ARDUINO>99
-#include <Arduino.h> // Arduino 1.0
-#else
-#include <Wprogram.h> // Arduino 0022
-#endif
-
 #include <PS4Controller.h>
 
 //[CONSTANTS]
