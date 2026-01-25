@@ -98,7 +98,7 @@ static byte       g_l2Val, g_r2Val;
 static short      g_sGPSMController = 32767;  // What GPSM value have we calculated
 
 // Forward function references
-extern void PS2TurnRobotOff(void);
+extern void PS4TurnRobotOff(void);
 
 //=============================================================================
 // Helper Functions
@@ -415,16 +415,16 @@ void InputController::ControlInput(void) {
   }
   else if(ControlMode == TRANSLATEMODE) {
     // Body translation mode
-    g_InControlState.BodyPosX = (g_lx - 128) / 2;
-    g_InControlState.BodyPosZ = -(g_ly - 128) / 3;
-    g_InControlState.BodyRotY = (g_rx - 128) * 2;
+    g_InControlState.BodyPos.x = (g_lx - 128) / 2;
+    g_InControlState.BodyPos.z = -(g_ly - 128) / 3;
+    g_InControlState.BodyPos.y = (g_rx - 128) * 2;
     g_BodyYShift = (g_ry - 128) / 2;
   }
   else if(ControlMode == ROTATEMODE) {
     // Body rotation mode
-    g_InControlState.BodyRotX = (g_ry - 128);
-    g_InControlState.BodyRotZ = (g_lx - 128);
-    g_InControlState.BodyRotY = (g_rx - 128) * 2;
+    g_InControlState.BodyRot1.x = (g_ry - 128);
+    g_InControlState.BodyRot1.z = (g_lx - 128);
+    g_InControlState.BodyRot1.y = (g_rx - 128) * 2;
   }
   else if(ControlMode == SINGLELEGMODE) {
     // Single leg control
@@ -434,11 +434,7 @@ void InputController::ControlInput(void) {
   }
   
   // Commit our body offset
-  g_InControlState.BodyPosY = g_BodyYOffset + g_BodyYShift;
-  
-  // Hold previous positions
-  g_InControlState.lx = g_lx;
-  g_InControlState.ly = g_ly;
+  g_InControlState.BodyPos.y = g_BodyYOffset + g_BodyYShift;
 }
 
 //=============================================================================
@@ -497,12 +493,12 @@ boolean InputController::ProcessTerminalCommand(byte *psz, byte bLen) {
 void PS4TurnRobotOff(void)
 {
   //Turn off
-  g_InControlState.BodyPosX = 0;
-  g_InControlState.BodyPosY = 0;
-  g_InControlState.BodyPosZ = 0;
-  g_InControlState.BodyRotX = 0;
-  g_InControlState.BodyRotY = 0;
-  g_InControlState.BodyRotZ = 0;
+  g_InControlState.BodyPos.x = 0;
+  g_InControlState.BodyPos.y = 0;
+  g_InControlState.BodyPos.z = 0;
+  g_InControlState.BodyRot1.x = 0;
+  g_InControlState.BodyRot1.y = 0;
+  g_InControlState.BodyRot1.z = 0;
   g_InControlState.TravelLength.x = 0;
   g_InControlState.TravelLength.z = 0;
   g_InControlState.TravelLength.y = 0;

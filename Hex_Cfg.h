@@ -48,7 +48,7 @@
 
 // SSC-32 Serial Port (Hardware Serial)
 #define SSCSerial Serial2
-#define cSSC_BAUD 115200
+#define SSC_BAUD 115200
 #define SSC_RX_PIN 16       // ESP32 RX pin connected to SSC-32 TX
 #define SSC_TX_PIN 17       // ESP32 TX pin connected to SSC-32 RX
 
@@ -128,18 +128,7 @@
 // or kept open for future expansion
 
 //=============================================================================
-//[Hex Configuration]
-//=============================================================================
-
-<<<<<<< Updated upstream
-// Leg dimensions - MEASURE YOUR HEXAPOD AND UPDATE THESE!
-// All measurements in millimeters
-#define cXXCoxaLength     29    
-#define cXXFemurLength    85
-#define cXXTibiaLength    125
-=======
-//=============================================================================
-// Individual Servo Ranges
+//[MIN/MAX angles]
 //=============================================================================
 #define cRRCoxaMin1	-260	//Mechanical limits of the Right Rear Leg, decimals = 1
 #define cRRCoxaMax1	740
@@ -147,7 +136,51 @@
 #define cRRFemurMax1	950
 #define cRRTibiaMin1	-1060
 #define cRRTibiaMax1	770
->>>>>>> Stashed changes
+
+#define cRMCoxaMin1	-530	//Mechanical limits of the Right Middle Leg, decimals = 1
+#define cRMCoxaMax1	530
+#define cRMFemurMin1	-1010
+#define cRMFemurMax1	950
+#define cRMTibiaMin1	-1060
+#define cRMTibiaMax1	770
+
+#define cRFCoxaMin1	-580	//Mechanical limits of the Right Front Leg, decimals = 1
+#define cRFCoxaMax1	740
+#define cRFFemurMin1	-1010
+#define cRFFemurMax1	950
+#define cRFTibiaMin1	-1060
+#define cRFTibiaMax1	770
+
+#define cLRCoxaMin1	-740	//Mechanical limits of the Left Rear Leg, decimals = 1
+#define cLRCoxaMax1	260
+#define cLRFemurMin1	-950
+#define cLRFemurMax1	1010
+#define cLRTibiaMin1	-770
+#define cLRTibiaMax1	1060
+
+#define cLMCoxaMin1	-530	//Mechanical limits of the Left Middle Leg, decimals = 1
+#define cLMCoxaMax1	530
+#define cLMFemurMin1	-950
+#define cLMFemurMax1	1010
+#define cLMTibiaMin1	-770
+#define cLMTibiaMax1	1060
+
+#define cLFCoxaMin1	-740	//Mechanical limits of the Left Front Leg, decimals = 1
+#define cLFCoxaMax1	580
+#define cLFFemurMin1	-950
+#define cLFFemurMax1	1010
+#define cLFTibiaMin1	-770
+#define cLFTibiaMax1	1060
+
+//=============================================================================
+//[Leg dimensions]
+//=============================================================================
+
+//  - MEASURE YOUR HEXAPOD AND UPDATE THESE!
+// All measurements in millimeters
+#define cXXCoxaLength     29    
+#define cXXFemurLength    85
+#define cXXTibiaLength    125
 
 //  Right Rear (RR) leg
 #define cRRCoxaLength     cXXCoxaLength     
@@ -178,6 +211,7 @@
 #define cLFCoxaLength     cXXCoxaLength     
 #define cLFFemurLength    cXXFemurLength
 #define cLFTibiaLength    cXXTibiaLength
+
 //=============================================================================
 // Body Dimensions
 //=============================================================================
@@ -202,6 +236,8 @@
 #define cLFOffsetX  39      //  Distance X from center of the body to the Left Front coxa
 #define cLFOffsetZ  -75     //  Distance Z from center of the body to the Left Front coxa
 
+
+
 //=============================================================================
 // Start Position of Legs
 //=============================================================================
@@ -209,11 +245,6 @@
 #define cHexInitXZCos   53     // Default distance X - From center of body to foot (cos(45) * cHexInitXZ)
 #define cHexInitXZSin   91     // Default distance Z - From center of body to foot (sin(45) * cHexInitXZ)
 #define cHexInitY       25     // Default height of body from ground
-
-//=============================================================================
-// Body and Movement Settings
-//=============================================================================
-#define MAX_BODY_Y      100    // Maximum body height
 
 #define cRRInitPosX     cHexInitXZCos      // Right Rear
 #define cRRInitPosY     cHexInitY

@@ -32,6 +32,10 @@ const byte cTarsPin[] PROGMEM = {
 
 
 // Add support for running on non-mega Arduino boards as well.
+#ifdef ESP32
+// Initialize ESP32 hardware serial
+Serial2.begin(SSC_BAUD, SERIAL_8N1, SSC_RX_PIN, SSC_TX_PIN);
+#else
 #ifdef __AVR__
 #if not defined(UBRR1H)
 #if cSSC_IN == 0
@@ -59,10 +63,7 @@ extern int SSCRead (byte* pb, int cb, word wTimeout, word wEOL);
 //Init
 //--------------------------------------------------------------------
 void ServoDriver::Init(void) {
-#ifdef ESP32
-  // Initialize ESP32 hardware serial
-  Serial2.begin(SSC_BAUD, SERIAL_8N1, SSC_RX_PIN, SSC_TX_PIN);
-#else
+
   #ifdef __AVR__
   #if not defined(UBRR1H)
   #if cSSC_IN == 0
@@ -72,7 +73,7 @@ void ServoDriver::Init(void) {
   #endif    
   #endif
   #endif
-  SSCSerial.begin(cSSC_BAUD);
+  SSCSerial.begin(SSC_BAUD);
 #endif
 
   // Lets do the check for GP Enabled here...
