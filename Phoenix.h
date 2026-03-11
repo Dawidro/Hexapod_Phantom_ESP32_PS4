@@ -86,7 +86,7 @@ extern const byte cTarsLength[] PROGMEM;
 #endif
 
 #ifdef DEBUG_IOPINS
-#define DebugToggle(pin)  {digitalWrite(pin, !digitalRead(pin));}
+#define DebugToggle(pin)  {digitalWrite(pin, !digitalRead(pinSketchSetup));}
 #define DebugWrite(pin, state) {digitalWrite(pin, state);}
 #else
 #define DebugToggle(pin)  {;}

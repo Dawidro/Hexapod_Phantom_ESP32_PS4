@@ -74,7 +74,7 @@
 #define OPT_SINGLELEG // Enables single leg option
 
 // Allow sketch to add custom setup code
-// #define OPT_SKETCHSETUP      // If defined, calls SketchSetup() from your .ino
+#define OPT_SKETCHSETUP      // If defined, calls SketchSetup() from your .ino
 
 // Background Process - Allow background tasks during servo moves
 // #define OPT_BACKGROUND_PROCESS  // If defined, calls BackgroundProcess()

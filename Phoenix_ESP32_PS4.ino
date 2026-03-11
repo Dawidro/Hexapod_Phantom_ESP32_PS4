@@ -39,14 +39,6 @@
 #include <PS4Controller.h>        // PS4 Controller library
 
 //=============================================================================
-// Include Phoenix Core and Driver Files
-//=============================================================================
-#include "Phoenix.h"              // Phoenix code Header
-#include "Phoenix_Code.h"         // Main Phoenix Code
-#include "Phoenix_Input_PS4.h"    // PS4 Controller input handler
-#include "Phoenix_Driver_SSC32.h" // SSC-32 servo driver
-
-//=============================================================================
 // OPTIONAL Hook Functions
 // These are only called if you enable them in Hex_Cfg.h with #define
 //=============================================================================
@@ -80,6 +72,7 @@ void SketchSetup(void) {
 #ifdef PS4_MAC_ADDRESS
   PS4.begin(PS4_MAC_ADDRESS);
 #else
+  DBGSerial.println(F("PS4.begin"));
   PS4.begin();  // Use default pairing
 #endif
 
@@ -89,7 +82,7 @@ void SketchSetup(void) {
 #endif
 
   // Small startup beep
-  MSound(3, 50, 2000, 50, 2500, 50, 3000);
+  // MSound(3, 50, 2000, 50, 2500, 50, 3000);
 }
 #endif
 
@@ -147,3 +140,11 @@ word CheckVoltage(void) {
 // which we already defined in Phoenix_Input_PS4.h
 
 #endif // OPT_TERMINAL_MONITOR
+
+//=============================================================================
+// Include Phoenix Core and Driver Files
+//=============================================================================
+#include "Phoenix.h"              // Phoenix code Header
+#include "Phoenix_Code.h"         // Main Phoenix Code
+#include "Phoenix_Input_PS4.h"    // PS4 Controller input handler
+#include "Phoenix_Driver_SSC32.h" // SSC-32 servo driver

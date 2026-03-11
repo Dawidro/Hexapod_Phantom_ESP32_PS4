@@ -30,25 +30,18 @@ const byte cTarsPin[] PROGMEM = {
 #endif
 #endif
 
-
-// Add support for running on non-mega Arduino boards as well.
 #ifdef ESP32
-// Initialize ESP32 hardware serial
-Serial2.begin(SSC_BAUD, SERIAL_8N1, SSC_RX_PIN, SSC_TX_PIN);
+  #define SSCSerial Serial2
 #else
-#ifdef __AVR__
-#if not defined(UBRR1H)
-#if cSSC_IN == 0
-#define SSCSerial Serial
-#else
-SoftwareSerial SSCSerial(cSSC_IN, cSSC_OUT);
-#endif    
-#endif
-#endif
-
-// ESP32 support for Serial2
-#ifdef ESP32
-#define SSCSerial Serial2
+  #ifdef __AVR__
+    #if !defined(UBRR1H)
+      #if cSSC_IN == 0
+        #define SSCSerial Serial
+      #else
+        SoftwareSerial SSCSerial(cSSC_IN, cSSC_OUT);
+      #endif    
+    #endif
+  #endif
 #endif
 
 //=============================================================================
@@ -64,17 +57,6 @@ extern int SSCRead (byte* pb, int cb, word wTimeout, word wEOL);
 //--------------------------------------------------------------------
 void ServoDriver::Init(void) {
 
-  #ifdef __AVR__
-  #if not defined(UBRR1H)
-  #if cSSC_IN == 0
-  #define SSCSerial Serial
-  #else
-  SoftwareSerial SSCSerial(cSSC_IN, cSSC_OUT);
-  #endif    
-  #endif
-  #endif
-  SSCSerial.begin(SSC_BAUD);
-#endif
 
   // Lets do the check for GP Enabled here...
 #ifdef OPT_GPPLAYER
@@ -83,6 +65,15 @@ void ServoDriver::Init(void) {
 
   _fGPEnabled = false;  // starts off assuming that it is not enabled...
   _fGPActive = false;
+
+// START SERIAL COMMUNICATION
+#ifdef ESP32
+  // We initialize Serial2 here inside the function scope
+  DBGSerial.println(F("Serial2.begin(SSC_BAUD, SERIAL_8N1, SSC_RX_PIN, SSC_TX_PIN"));
+  Serial2.begin(SSC_BAUD, SERIAL_8N1, SSC_RX_PIN, SSC_TX_PIN);
+#else
+  SSCSerial.begin(SSC_BAUD);
+#endif
 
 #ifdef __AVR__
 #if not defined(UBRR1H)
